@@ -42,11 +42,6 @@ jobs:
         id: docker_pull_1
         run:  |
           docker pull 123459096/first-repo:pull_request_process_image
-	  echo 'Bitbucket commit : $GITHUB_SHA'
-	  echo 'Destination_Branch : $GITHUB_HEAD_REF'
-          echo 'Source_Branch :$GITHUB_BASE_REF'
-	  echo 'Repo_Name : $GITHUB_REPOSITORY'
-	  echo 'PR_ID  $GITHUB_REF'
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
