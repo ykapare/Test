@@ -75,5 +75,12 @@ jobs:
       - name: Run4
         run:  docker ps -aq -f status=running -f name=pull_request_image
 
+      - name: Run5
+        run:   docker logs pull_request_image
+      
+      - name: Run6
+        run:  echo "Ending pipeline"
+
+              
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
