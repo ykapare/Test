@@ -48,20 +48,10 @@ jobs:
       - name: Run variable
         run:  echo "Repo_Name $GITHUB_REPOSITORY"
         
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-           file: ./Dockerfile
-
       - name: pull image_1
         id: docker_pull_1
         run:  |
           docker pull 123459096/first-repo:pull_request_process_image_github
-          docker ps -aq -f status=running -f name=pull_request_image_github
-          docker run -d -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT -e BITBUCKET_PR_DESTINATION_BRANCH=$GITHUB_BASE_REF -e BITBUCKET_BRANCH=$GITHUB_HEAD_REF -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG -e BITBUCKET_PR_ID=$BITBUCKET_PR_ID --name pull_request_image_github 123459096/first-repo:pull_request_process_image_github
-          while [ $(docker ps -aq -f status=running -f name=pull_request_image_github) ]; do   echo Executing checks; sleep 5; done
-          docker ps -aq -f status=running -f name=pull_request_image_github
 
       - name: Run_1
         run:  docker ps -aq -f status=running -f name=pull_request_image
@@ -80,7 +70,3 @@ jobs:
       
       - name: Run6
         run:  echo "Ending pipeline"
-
-              
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
