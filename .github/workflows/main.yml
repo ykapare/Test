@@ -41,6 +41,7 @@ jobs:
       - name: pull image_1
         id: docker_pull_1
         run:  |
+          echo "$GITHUB_SHA"
           docker pull 123459096/first-repo:pull_request_process_image
           docker ps -aq -f status=running -f name=pull_request_image
 
