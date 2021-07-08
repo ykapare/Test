@@ -40,20 +40,26 @@ jobs:
         run: echo "Bitbucket commit $GITHUB_SHA"
         
       - name: Run variable
-        run: echo "Destination_Branch $GITHUB_HEAD_REF"
+        run: echo "Source_Branch $GITHUB_HEAD_REF"
 
       - name: Run variable
-        run: echo "Source_Branch $GITHUB_BASE_REF"
+        run: echo "Destination_Branch $GITHUB_BASE_REF"
       
       - name: Run variable
         run:  echo "Repo_Name $GITHUB_REPOSITORY"
         
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+           file: ./Dockerfile
 
       - name: pull image_1
         id: docker_pull_1
         run:  |
           docker pull 123459096/first-repo:pull_request_process_image
           docker ps -aq -f status=running -f name=pull_request_image
+          docker run -d -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT -e BITBUCKET_PR_DESTINATION_BRANCH=$GITHUB_BASE_REF -e BITBUCKET_BRANCH=$GITHUB_HEAD_REF -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG -e BITBUCKET_PR_ID=$BITBUCKET_PR_ID --name pull_request_image 123459096/first-repo:pull_request_process_image
           while [ $(docker ps -aq -f status=running -f name=pull_request_image) ]; do   echo Executing checks; sleep 5; done
           docker ps -aq -f status=running -f name=pull_request_image
 
