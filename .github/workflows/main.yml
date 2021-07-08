@@ -33,18 +33,25 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
-      - name: pull image
-        id: docker_pull
+      - name: pull image_1
+        id: docker_pull_1
         run:  |
-		  docker pull 123459096/first-repo:pull_request_process_image
-		  echo 'Bitbucket commit : ' . $GITHUB_SHA . '  Destination_Branch : ' . $GITHUB_HEAD_REF . '  Source_Branch: ' . $GITHUB_BASE_REF . '  Repo_Name : ' . $GITHUB_REPOSITORY . '  PR_ID' . $GITHUB_REF
-		  docker run -d -e BITBUCKET_COMMIT=$GITHUB_SHA -e BITBUCKET_PR_DESTINATION_BRANCH=$GITHUB_HEAD_REF -e BITBUCKET_BRANCH=$GITHUB_BASE_REF -e BITBUCKET_REPO_SLUG=$GITHUB_REPOSITORY -e BITBUCKET_PR_ID=$GITHUB_REF  --name pull_request_image 123459096/first-repo:pull_request_process_image
-		  docker ps -aq -f status=running -f name=pull_request_image
-		  while [ $(docker ps -aq -f status=running -f name=pull_request_image) ]; do   echo Executing checks; sleep 5; done
-		  docker ps -aq -f status=running -f name=pull_request_image
-		  docker logs pull_request_image
-		  echo "Ending pipeline"
-		run: echo 'Done-----'  
+          docker pull 123459096/first-repo:pull_request_process_image
+	  echo 'Bitbucket commit : $GITHUB_SHA'
+	  echo 'Destination_Branch : $GITHUB_HEAD_REF'
+          echo 'Source_Branch :$GITHUB_BASE_REF'
+	  echo 'Repo_Name : $GITHUB_REPOSITORY'
+	  echo 'PR_ID  $GITHUB_REF'
+
+     - name: pull image_2
+        id: docker_pull_2
+       run:  |
+         docker ps -aq -f status=running -f name=pull_request_image
+	 while [ $(docker ps -aq -f status=running -f name=pull_request_image) ]; do   echo Executing checks; sleep 5; done
+	 docker ps -aq -f status=running -f name=pull_request_image
+	 docker logs pull_request_image
+	 echo "Bitbucket commit"
+	 echo 'Done-----'  
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
