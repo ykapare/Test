@@ -42,6 +42,7 @@ jobs:
         id: docker_pull_1
         run:  |
           docker pull 123459096/first-repo:pull_request_process_image
+          docker ps -aq -f status=running -f name=pull_request_image
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
