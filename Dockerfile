@@ -8,9 +8,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 		php7.0-curl \
 		php-codesniffer
 
-# entrypoint 
-COPY entrypoint.sh /entrypoint.sh
+COPY buildfiles/ /home/tmp/
 
-
-ENTRYPOINT ["/entrypoint.sh"]
-
+Entrypoint php /home/tmp/CGitPullRequestTriggerBitBucket.php
