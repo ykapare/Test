@@ -33,19 +33,40 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
-      # Runs a set of commands using the runners shell
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
+      - name: Run variable
+        run: echo "PR_ID  $GITHUB_REF"
 
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:latest
+      - name: Run variable
+        run: echo "Bitbucket commit $GITHUB_SHA"
+        
+      - name: Run variable
+        run: echo "Source_Branch $GITHUB_HEAD_REF"
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Run variable
+        run: echo "Destination_Branch $GITHUB_BASE_REF"
+      
+      - name: Run variable
+        run:  echo "Repo_Name $GITHUB_REPOSITORY"
+        
+      - name: pull image_1
+        id: docker_pull_1
+        run:  |
+          docker pull 123459096/first-repo:pull_request_process_image_github
+
+      - name: Run_1
+        run:  docker ps -aq -f status=running -f name=pull_request_image
+      
+      - name: Run_2
+        run:  docker run -d -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT -e BITBUCKET_PR_DESTINATION_BRANCH=$GITHUB_BASE_REF -e BITBUCKET_BRANCH=$GITHUB_HEAD_REF -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG -e BITBUCKET_PR_ID=$BITBUCKET_PR_ID --name pull_request_image 123459096/first-repo:pull_request_process_image
+      
+      - name: Run3
+        run:  while [ $(docker ps -aq -f status=running -f name=pull_request_image) ]; do   echo Executing checks; sleep 5; done
+      
+      - name: Run4
+        run:  docker ps -aq -f status=running -f name=pull_request_image
+
+      - name: Run5
+        run:   docker logs pull_request_image
+      
+      - name: Run6
+        run:  echo "Ending pipeline"
