@@ -37,7 +37,7 @@ jobs:
         run: echo "PR_ID  $GITHUB_REF"
 
       - name: Run variable
-        run: echo "Bitbucket commit $GITHUB_SHA"
+        run: echo "Bitbucket commit ${{ github.event.pull_request.head.sha }}"
         
       - name: Run variable
         run: echo "Source_Branch $GITHUB_HEAD_REF"
