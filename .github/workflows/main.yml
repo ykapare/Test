@@ -21,8 +21,8 @@ jobs:
       - name: testing connection
         uses: appleboy/ssh-action@master
         with:
-          host: in-script01-trunk
-          username: jenkins
+          host: am-jenkins-master01
+          username: ykapare
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
