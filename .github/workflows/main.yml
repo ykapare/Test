@@ -22,9 +22,12 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: in-script01-trunk
-          username: rshukla
+          username: jenkins
           key: ${{ secrets.SSH_KEY }}
           port: 22
+          script: |
+            cd /home/rshukla/
+            ls -l
 
           
       # Runs a single command using the runners shell
