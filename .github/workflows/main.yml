@@ -26,7 +26,7 @@ jobs:
           SOURCE: "test.txt"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
-          TARGET: "/home/rshukla/"
+          TARGET: "/home/ykapare/"
 
           
       # Runs a single command using the runners shell
