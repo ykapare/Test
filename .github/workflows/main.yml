@@ -17,18 +17,20 @@ jobs:
   build:
     runs-on: self-hosted
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - name: Deploy to Staging server
+    steps:          
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+         ref: ykapare_test_branch1
+      - name: deploy
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           ARGS: "-rltgoDzvO --delete"
-          SOURCE: "test.txt"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: "/home/ykapare/"
-
-          
+         
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
