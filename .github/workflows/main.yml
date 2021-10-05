@@ -43,6 +43,7 @@ jobs:
           env:
             key: ${{ matrix.server.name }}
           run: |
+            echo "First parameter: ${{ matrix.server.name }}"
             echo "server_name ${{ secrets[matrix.server.name] }}"
             echo "server_ip ${{ matrix.server.ip }}"
         
