@@ -43,7 +43,6 @@ jobs:
           uses: easingthemes/ssh-deploy@main
           env:
             SSH_PRIVATE_KEY: ${{ secrets[matrix.server.name] }}
-            ARGS: "-rltgoDzvO --delete"
             REMOTE_HOST: ${{ matrix.server.ip }}
             REMOTE_USER: ${{ matrix.server.username }}
             TARGET: "/home/ykapare/"
