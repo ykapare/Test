@@ -1,7 +1,7 @@
 [
   {
-    "name": "SERVER_2",
-    "ip": "192.168.171.37",
+    "name": "SERVER_3",
+    "ip": "192.168.172.17",
     "username": "ykapare",
     "port": "22",
     "path": "/home/ykapare/"
