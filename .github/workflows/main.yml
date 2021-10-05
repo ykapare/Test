@@ -37,7 +37,7 @@ jobs:
             ref: ykapare_test_branch1
 
     prepare-release-on-servers:
-      name: "Prepare release"
+      name: Prepare release
       runs-on: self-hosted
       needs: create-deployment-artifacts
       strategy:
