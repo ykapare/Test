@@ -41,6 +41,6 @@ jobs:
       steps:
         - name: run loop
           run: |
-            echo "server_name ${{ matrix.server.name }}"
+            echo "server_name ${{ secrets.matrix.server.name }}"
             echo "server_ip ${{ matrix.server.ip }}"
         
