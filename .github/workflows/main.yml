@@ -40,7 +40,9 @@ jobs:
           server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
       steps:
         - name: run loop
+          env:
+            key: ${{ matrix.server.name }}
           run: |
-            echo "server_name ${{ secrets.matrix.server.name }}"
+            echo "server_name ${{ secrets.key }}"
             echo "server_ip ${{ matrix.server.ip }}"
         
