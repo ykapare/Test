@@ -32,6 +32,17 @@ jobs:
             JSON="${JSON//$'\r'/'%0D'}"
             echo "::set-output name=deployment-matrix::$JSON"
             
+        - name: Create deployment artifact
+          env:
+            GITHUB_SHA: ${{ github.sha }}
+          run: tar -czf app.tar.gz --exclude=*.git --exclude=node_modules *
+          
+        - name: Store artifact for distribution
+          uses: actions/upload-artifact@v2
+          with:
+            name: app-build
+            path: ${{ github.sha }}.tar.gz
+  
   prepare-release-on-servers:
       name: "${{ matrix.server.name }}: Prepare release"
       runs-on: self-hosted
