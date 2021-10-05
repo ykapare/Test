@@ -22,16 +22,7 @@ jobs:
         - uses: actions/checkout@v2
           with:
             ref: ykapare_test_branch1
-
-        - name: read json file
-          id: export-deployment-matrix
-          run: |
-            JSON="$(cat ./deployment-config.json)"
-            JSON="${JSON//'%'/'%25'}"
-            JSON="${JSON//$'\n'/'%0A'}"
-            JSON="${JSON//$'\r'/'%0D'}"
-            echo "::set-output name=deployment-matrix::$JSON"
-            
+          
         - name: Create deployment artifact
           env:
             GITHUB_SHA: ${{ github.sha }}
@@ -42,7 +33,15 @@ jobs:
           with:
             name: app-build
             path: ${{ github.sha }}.tar.gz
-  
+
+        - name: Export deployment matrix
+          id: export-deployment-matrix
+          run: |
+            JSON="$(cat ./deployment-config.json)"
+            JSON="${JSON//'%'/'%25'}"
+            JSON="${JSON//$'\n'/'%0A'}"
+            JSON="${JSON//$'\r'/'%0D'}"
+            echo "::set-output name=deployment-matrix::$JSON"  
   prepare-release-on-servers:
       name: "${{ matrix.server.name }}: Prepare release"
       runs-on: self-hosted
