@@ -37,13 +37,12 @@ jobs:
             ref: ykapare_test_branch1
 
     prepare-release-on-servers:
-      name: Prepare release
+      name: "${{ matrix.server.name }}: Prepare release"
       runs-on: self-hosted
       needs: create-deployment-artifacts
       steps:
         - name: run loop
           run: |
-            echo "${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}"
             echo "server_name ${{ matrix.server.name }}"
             echo "server_ip ${{ matrix.server.ip }}"
         
