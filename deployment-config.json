@@ -1,4 +1,11 @@
 [
+   {
+    "name": "SERVER_1",
+    "ip": "192.168.171.20",
+    "username": "ykapare",
+    "port": "22",
+    "path": "/home/ykapare/"
+  },
   {
     "name": "SERVER_3",
     "ip": "192.168.172.17",
