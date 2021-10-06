@@ -21,7 +21,7 @@ jobs:
       steps:
         - uses: actions/checkout@v2
           with:
-            ref: ykapare_test_branch1
+            ref: ykapare-patch-1
           
         - name: Export deployment matrix
           id: export-deployment-matrix
