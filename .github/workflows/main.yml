@@ -1,4 +1,4 @@
-# This a basic workflow to help you get started with Actions
+# This is a basic workflow to help you get started with Actions
 
 name: CI to Docker Hub
 
@@ -13,37 +13,53 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  create-deployment-artifacts:
-      name: Create deployment artifacts
-      runs-on: self-hosted
-      outputs:
-        deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            ref: ykapare-patch-1
-          
-        - name: Export deployment matrix
-          id: export-deployment-matrix
-          run: |
-            JSON="$(cat ./deployment-config.json)"
-            JSON="${JSON//'%'/'%25'}"
-            JSON="${JSON//$'\n'/'%0A'}"
-            JSON="${JSON//$'\r'/'%0D'}"
-            echo "::set-output name=deployment-matrix::$JSON"  
-  prepare-release-on-servers:
-      name: "${{ matrix.server.name }}: Prepare release"
-      runs-on: self-hosted
-      needs: create-deployment-artifacts
-      strategy:
-        matrix:
-          server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
-      steps:
-        - name: deploy
-          uses: easingthemes/ssh-deploy@main
-          env:
-            SSH_PRIVATE_KEY: ${{ secrets[matrix.server.name] }}
-            REMOTE_HOST: ${{ matrix.server.ip }}
-            REMOTE_USER: ${{ matrix.server.username }}
-            TARGET: "/home/ykapare/"
-        
+  # This workflow contains a single job called "build"
+  build:
+     runs-on: ubuntu-latest
+     steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      - name: Run variable
+        run: echo "PR_ID  $GITHUB_REF"
+
+      - name: Run variable
+        run: echo "Bitbucket commit ${{ github.event.pull_request.head.sha }}"
+
+      - name: Run variable
+        run: echo "Source_Branch $GITHUB_HEAD_REF"
+
+      - name: Run variable
+        run: echo "Destination_Branch $GITHUB_BASE_REF"
+
+      - name: Run variable
+        run:  echo "Repo_Name $GITHUB_REPOSITORY"
+
+      - name: pull image_1
+        id: docker_pull_1
+        run:  |
+          docker pull 123459096/first-repo:pull_request_process_image_github
+      - name: Run_1
+        run:  docker ps -aq -f status=running -f name=pull_request_image
+
+      - name: Run_2
+        run:  docker run -d -e BITBUCKET_COMMIT=${{ github.event.pull_request.head.sha }} -e BITBUCKET_PR_DESTINATION_BRANCH=$GITHUB_BASE_REF -e BITBUCKET_BRANCH=$GITHUB_HEAD_REF -e BITBUCKET_REPO_SLUG=$GITHUB_REPOSITORY -e BITBUCKET_PR_ID=$GITHUB_REF --name pull_request_image 123459096/first-repo:pull_request_process_image_github
+
+      - name: Run3
+        run:  while [ $(docker ps -aq -f status=running -f name=pull_request_image) ]; do   echo Executing checks; sleep 5; done
+
+      - name: Run4
+        run:  docker ps -aq -f status=running -f name=pull_request_image
+
+      - name: Run5
+        run:   docker logs pull_request_image
+
+      - name: Run6
+        run:  echo "Ending pipeline"
