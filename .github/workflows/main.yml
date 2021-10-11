@@ -6,7 +6,7 @@ name: CI to Docker Hub
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   pull_request:
-    branches: [ master, develop ]
+    branches: [ develop, rapid-release, rapid-production ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -15,20 +15,14 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
+     runs-on: ubuntu-latest
+     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
@@ -37,36 +31,35 @@ jobs:
         run: echo "PR_ID  $GITHUB_REF"
 
       - name: Run variable
-        run: echo "Bitbucket commit $GITHUB_SHA"
-        
+        run: echo "Bitbucket commit ${{ github.event.pull_request.head.sha }}"
+
       - name: Run variable
         run: echo "Source_Branch $GITHUB_HEAD_REF"
 
       - name: Run variable
         run: echo "Destination_Branch $GITHUB_BASE_REF"
-      
+
       - name: Run variable
         run:  echo "Repo_Name $GITHUB_REPOSITORY"
-        
+
       - name: pull image_1
         id: docker_pull_1
         run:  |
           docker pull 123459096/first-repo:pull_request_process_image_github
-
       - name: Run_1
         run:  docker ps -aq -f status=running -f name=pull_request_image
-      
+
       - name: Run_2
-        run:  docker run -d -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT -e BITBUCKET_PR_DESTINATION_BRANCH=$GITHUB_BASE_REF -e BITBUCKET_BRANCH=$GITHUB_HEAD_REF -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG -e BITBUCKET_PR_ID=$BITBUCKET_PR_ID --name pull_request_image 123459096/first-repo:pull_request_process_image
-      
+        run:  docker run -d -e BITBUCKET_COMMIT=${{ github.event.pull_request.head.sha }} -e BITBUCKET_PR_DESTINATION_BRANCH=$GITHUB_BASE_REF -e BITBUCKET_BRANCH=$GITHUB_HEAD_REF -e BITBUCKET_REPO_SLUG=$GITHUB_REPOSITORY -e BITBUCKET_PR_ID=$GITHUB_REF --name pull_request_image 123459096/first-repo:pull_request_process_image_github
+
       - name: Run3
         run:  while [ $(docker ps -aq -f status=running -f name=pull_request_image) ]; do   echo Executing checks; sleep 5; done
-      
+
       - name: Run4
         run:  docker ps -aq -f status=running -f name=pull_request_image
 
       - name: Run5
         run:   docker logs pull_request_image
-      
+
       - name: Run6
         run:  echo "Ending pipeline"
